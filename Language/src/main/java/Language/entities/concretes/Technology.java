@@ -5,14 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "languages")
-public class Language {
+public class Technology {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -20,6 +17,7 @@ public class Language {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "language")
-    private List<Technology> technologies;
+    @ManyToOne
+    @JoinColumn(name = "language_id", nullable = false)
+    private Language language;
 }
