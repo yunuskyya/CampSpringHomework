@@ -1,13 +1,15 @@
 package Language.business.abstracts;
 
+import Language.business.dto.resposes.CreateLanguageRuquest;
+import Language.business.dto.ruquests.GetAllLanguageResponse;
 import Language.entities.concretes.Language;
 
 import java.util.List;
 
 public interface LanguageService {
-    List<Language> getAll();
-    public void add(Language language);
-    public void delete(int id);
-    public void update(int id, String name);
+    List<GetAllLanguageResponse> getAll();
+    void add(CreateLanguageRuquest createLanguageRuquest);
+    void update(CreateLanguageRuquest createLanguageRuquest ,int id);
+
 
 }

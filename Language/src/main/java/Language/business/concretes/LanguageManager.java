@@ -1,52 +1,55 @@
 package Language.business.concretes;
 
 import Language.business.abstracts.LanguageService;
+import Language.business.dto.resposes.CreateLanguageRuquest;
+import Language.business.dto.ruquests.GetAllLanguageResponse;
 import Language.dataAccess.abstracts.LanguageRepository;
 import Language.entities.concretes.Language;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class LanguageManager implements LanguageService {
 
-    private  LanguageRepository languageRepository;
+    private LanguageRepository languageRepository;
 
     public LanguageManager(LanguageRepository languageRepository){
-        this. languageRepository = languageRepository;
-    }
-    @Override
-    public List<Language> getAll() {
-
-        return languageRepository.getAll();
+        this.languageRepository = languageRepository;
     }
 
-    @Override
-    public void add(Language language) {
-        List<Language> languages = languageRepository.getAll();
-        for (Language programingLanguage1 :languages){
-            if (programingLanguage1.getName().equals(language.getName()) || language.getName().isBlank()) {
-                throw new RuntimeException("Programlama dili boş veya zaten var");
-            }
-        }
-        languageRepository.add(language);
+    public List<GetAllLanguageResponse> getAll(){
 
-    }
+        List<Language> languages = languageRepository.findAll();
+        List<GetAllLanguageResponse> languageResponse = new ArrayList<GetAllLanguageResponse>();
 
-    @Override
-    public void delete(int id) {
-        languageRepository.delete(id);
-
-    }
-
-    @Override
-    public void update(int id, String name) {
-        List<Language> languages = languageRepository.getAll();
-        for(Language programingLanguage:languages){
-            if(programingLanguage.getName().equals(name) || name.isBlank()){
-                throw new RuntimeException("programlama dili girilemez.");
-            }
+        for(Language language: languages){
+            GetAllLanguageResponse responseItem = new GetAllLanguageResponse();
+            responseItem.setId(language.getId());
+            responseItem.setName(language.getName());
+            languageResponse.add(responseItem);
 
         }
-        languageRepository.update(id,name);
+        return languageResponse;
+
     }
+
+    @Override
+    public void add(CreateLanguageRuquest createLanguageRuquest) {
+        Language language = new Language();
+        language.setName(createLanguageRuquest.getName());
+
+        this.languageRepository.save(language);
+    }
+
+    @Override
+    public void update(CreateLanguageRuquest createLanguageRuquest ,int id) {
+        Language language = Language(id).orElse(null);
+        if (language == null) {
+            throw new Exception("ProgrammingLanguage could not find");
+        }
+        return new GetAllLanguageResponse(language);
+    }
+
+
 }
